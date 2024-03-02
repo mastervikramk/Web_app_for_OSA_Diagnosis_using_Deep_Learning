@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Patient - OSA Diagnosis</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column" style="min-height: 100vh;"> <!-- Make body a flex container -->
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">OSA Diagnosis</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                
+                <ul class="navbar-nav ml-auto"> <!-- ml-auto for right alignment -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-light text-center py-5">
+        <div class="container">
+            <h1>Add New Patient</h1>
+            <p class="lead">Enter patient details below.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mt-5 mb-auto"> <!-- Use mb-auto to push footer to the bottom -->
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="shadow p-4 rounded">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="First Name" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Last Name" id="last_name" name="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" placeholder="Age" id="age" name="age" required>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="sex" name="sex" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" placeholder="Weight (kg)" id="weight" name="weight" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" placeholder="Height (cm)" id="height" name="height" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" placeholder="Sampling Frequency (Hz)" id="sampling_frequency" name="sampling_frequency" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="csv_file">CSV File:</label>
+                            <input type="file" class="form-control-file" id="csv_file" name="csv_file" accept=".csv" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-3">
+        <div class="container">
+            <p>&copy; 2024 OSA Diagnosis. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Include Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
