@@ -44,6 +44,9 @@ def old_patient(request):
     return render(request, 'dashboard/old_patient.html', {'patients': patients})
 
 
-def patient_profile(request, patient_id):
+def old_patient_profile(request, patient_id):
     patient = Patient.objects.get(id=patient_id)
-    return render(request, 'dashboard/patient_profile.html', {'patient': patient})
+    return render(request, 'dashboard/old_patient_profile.html', {'patient': patient})
+
+def new_patient_profile(request):
+    return render(request, 'dashboard/new_patient_profile.html')
