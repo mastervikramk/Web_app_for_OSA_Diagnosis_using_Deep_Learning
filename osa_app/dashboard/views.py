@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .forms import PatientForm
 from .models import Patient,CSVFile
 from .forms import PatientForm, CSVFileForm
@@ -9,7 +9,9 @@ def dashboard(request):
     return render(request,"dashboard/dashboard.html")
 
 
-@login_required  # Protect the view so that only logged-in users can access it
+from django.urls import reverse
+
+@login_required
 def new_patient(request):
     if request.method == 'POST':
         patient_form = PatientForm(request.POST)
@@ -25,11 +27,13 @@ def new_patient(request):
             csv_file.patient = patient
             csv_file.save()
             
-            return redirect('patient_profile')  # Redirect to a success page
+            # Redirect to the new patient profile with patient ID as an argument
+            return redirect('new_patient_profile', patient_id=patient.id)
     else:
         patient_form = PatientForm()
         csv_file_form = CSVFileForm()
     return render(request, "dashboard/new_patient.html", {'patient_form': patient_form, 'csv_file_form': csv_file_form})
+
 
 
 def old_patient(request):
@@ -48,5 +52,6 @@ def old_patient_profile(request, patient_id):
     patient = Patient.objects.get(id=patient_id)
     return render(request, 'dashboard/old_patient_profile.html', {'patient': patient})
 
-def new_patient_profile(request):
-    return render(request, 'dashboard/new_patient_profile.html')
+def new_patient_profile(request, patient_id):
+    patient = get_object_or_404(Patient, id=patient_id)
+    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient})
