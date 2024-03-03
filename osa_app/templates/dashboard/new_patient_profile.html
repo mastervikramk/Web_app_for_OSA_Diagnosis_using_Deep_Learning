@@ -7,6 +7,15 @@
     <title>{{ patient.first_name }} {{ patient.last_name }} - Patient Profile</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .flex-item {
+            margin-bottom: 20px;
+        }
+
+        .content-wrapper {
+            min-height: calc(100vh - 50px); /* Subtracting the height of the footer */
+        }
+    </style>
 </head>
 
 <body>
@@ -20,7 +29,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-                <ul class="navbar-nav ml-auto"> <!-- ml-auto for right alignment -->
+                <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">Profile</a>
                     </li>
@@ -35,9 +44,10 @@
     <!-- Body Content -->
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 content-wrapper">
                 <h1 class="mb-4">{{ patient.first_name }} {{ patient.last_name }} - Patient Profile</h1>
-                <div class="card">
+                <!-- Patient Details Card -->
+                <div class="card mb-4">
                     <div class="card-body">
                         <h2 class="card-title">Patient Details:</h2>
                         <p><strong>Age:</strong> {{ patient.age }}</p>
@@ -47,26 +57,39 @@
                     </div>
                 </div>
 
-                <!-- Button for diagnosis -->
-                <form method="POST" action="{% url 'new_patient_profile' patient.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary mt-3">Diagnose</button>
-                </form>
-
-                <!-- Output of diagnosis -->
-                {% if diagnosis_output %}
-                <div class="mt-4">
-                    <h2>Diagnosis Output:<p style="background-color: lightblue; padding: 5px; display: inline-block;">{{ diagnosis_output }}</p></h2>
-                    
-
+                <!-- Diagnosis and Result Cards -->
+                <div class="row">
+                    <!-- Diagnosis Button Card -->
+                    <div class="col-md-6 flex-item">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h2 class="card-title">Diagnose</h2>
+                                <form method="POST" action="{% url 'new_patient_profile' patient.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-light btn-block">Diagnose</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Diagnosis Result Card -->
+                    <div class="col-md-6 flex-item">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <h2 class="card-title">Diagnosis Output</h2>
+                                {% if diagnosis_output %}
+                                <p><b>{{ diagnosis_output }}</b></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {% endif %}
+
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light text-center py-3 fixed-bottom">
+    <footer class="bg-dark text-light text-center py-3">
         <div class="container">
             <p>&copy; 2024 OSA Diagnosis. All rights reserved.</p>
         </div>
