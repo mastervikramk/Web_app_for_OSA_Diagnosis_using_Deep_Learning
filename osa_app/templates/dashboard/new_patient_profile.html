@@ -13,7 +13,8 @@
         }
 
         .content-wrapper {
-            min-height: calc(100vh - 50px); /* Subtracting the height of the footer */
+            min-height: calc(100vh - 50px);
+            /* Subtracting the height of the footer */
         }
     </style>
 </head>
@@ -47,21 +48,25 @@
             <div class="col-md-12 content-wrapper">
                 <h1 class="mb-4">{{ patient.first_name }} {{ patient.last_name }} - Patient Profile</h1>
                 <!-- Patient Details Card -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h2 class="card-title">Patient Details:</h2>
-                        <p><strong>Age:</strong> {{ patient.age }}</p>
-                        <p><strong>Sex:</strong> {{ patient.sex }}</p>
-                        <p><strong>Weight:</strong> {{ patient.weight }}</p>
-                        <p><strong>Height:</strong> {{ patient.height }}</p>
-                    </div>
-                </div>
-
+                
                 <!-- Diagnosis and Result Cards -->
                 <div class="row">
+                    <!-- Patient Details Card -->
+                    <div class="col-md-6">
+                        <div class="card bg-light flex-item h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">Patient Details</h2>
+                                <p><strong>Age:</strong> {{ patient.age }}</p>
+                                <p><strong>Sex:</strong> {{ patient.sex }}</p>
+                                <p><strong>Weight:</strong> {{ patient.weight }}</p>
+                                <p><strong>Height:</strong> {{ patient.height }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Model Selection Form -->
-                    <div class="col-md-6 flex-item">
-                        <div class="card bg-primary text-white">
+                    <div class="col-md-6">
+                        <div class="card bg-primary text-white flex-item h-100">
                             <div class="card-body">
                                 <h2 class="card-title">Select Model</h2>
                                 <form method="POST" action="{% url 'new_patient_profile' patient.id %}">
@@ -79,17 +84,30 @@
                             </div>
                         </div>
                     </div>
-                </div>
+
                     <!-- Diagnosis Result Card -->
-                    <div class="col-md-6 flex-item">
-                        <div class="card bg-info text-white">
+                    <div class="col-md-6">
+                        <div class="card bg-info text-white flex-item h-100">
                             <div class="card-body">
                                 <h2 class="card-title">Diagnosis Output</h2>
                                 {% if diagnosis_output %}
                                 <p><b>{{ diagnosis_output }}</b></p>
-                                <p>Apneac Events: {{apneac_events}}</p>
-                                <p>Total Events: {{total_events}}</p>
-        
+                                <p>Apneac Events: {{ apneac_events }}</p>
+                                <p>Total Events: {{ total_events }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {%load static%}
+                    <!-- Image Card -->
+                    <div class="col-md-6">
+                        <div class="card bg-light flex-item h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">Model Image</h2>
+                                {% if model %}
+                                <img src="{% static 'css/' %}{{ model }}.png" class="img-fluid" alt="Model Image">
+                                {% else %}
+                                <p>No model selected</p>
                                 {% endif %}
                             </div>
                         </div>

@@ -67,6 +67,7 @@ def new_patient_profile(request, patient_id):
 # MODEL_FILE_PATH = 'my_model.h5'
 # model = load_model(MODEL_FILE_PATH)
 import os
+from PIL import Image
 
 MODEL_DIRECTORY = 'models'
 def load_model_from_file(model_name):
@@ -75,7 +76,6 @@ def load_model_from_file(model_name):
         return load_model(model_path)
     else:
         raise FileNotFoundError(f"Model file '{model_name}.h5' not found.")
-    
 
 
 def butter_bandpass(lowcut, highcut, fs, order=1):
@@ -172,6 +172,6 @@ def new_patient_profile(request, patient_id):
             else:
                 diagnosis_output = 'Normal'
 
-            return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output, 'apneac_events': num_ones, 'total_events': 420})
+            return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output, 'apneac_events': num_ones, 'total_events': 420, 'model': model_name})
 
-    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'model': model})
+    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'model': model_name})
