@@ -1,11 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Old_patient_profile</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Add custom styles here */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #343a40; /* Bootstrap dark background color */
+            color: #ffffff; /* Bootstrap light text color */
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Hello old patient</h1>
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">OSA Diagnosis</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Body Content -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 content-wrapper">
+                <div class="card bg-light">
+                    <div class="card-header bg-primary text-white"> <!-- Bootstrap primary background color -->
+                        Patient Details
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ patient.first_name }} {{ patient.last_name }}</h5>
+                        <p class="card-text">Age: {{ patient.age }}</p>
+                        <p class="card-text">Sex: {{ patient.sex }}</p>
+                        <p class="card-text">Weight: {{ patient.weight }}</p>
+                        <p class="card-text">Height: {{ patient.height }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 OSA Diagnosis. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Include Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 </body>
+
 </html>

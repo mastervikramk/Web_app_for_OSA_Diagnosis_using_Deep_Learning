@@ -54,12 +54,14 @@ def old_patient(request):
 
 
 def old_patient_profile(request, patient_id):
-    patient = Patient.objects.get(id=patient_id)
+    patient = get_object_or_404(Patient, id=patient_id)
     return render(request, 'dashboard/old_patient_profile.html', {'patient': patient})
 
-def new_patient_profile(request, patient_id):
-    patient = get_object_or_404(Patient, id=patient_id)
-    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient})
+
+
+# def new_patient_profile(request, patient_id):
+#     patient = get_object_or_404(Patient, id=patient_id)
+#     return render(request, 'dashboard/new_patient_profile.html', {'patient': patient})
 
 
 
