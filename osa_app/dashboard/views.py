@@ -63,9 +63,20 @@ def new_patient_profile(request, patient_id):
 
 
 
-# Load the machine learning model
-MODEL_FILE_PATH = 'my_model.h5'
-model = load_model(MODEL_FILE_PATH)
+# # Load the machine learning model
+# MODEL_FILE_PATH = 'my_model.h5'
+# model = load_model(MODEL_FILE_PATH)
+import os
+
+MODEL_DIRECTORY = 'models'
+def load_model_from_file(model_name):
+    model_path = os.path.join(MODEL_DIRECTORY, f"{model_name}.h5")
+    if os.path.exists(model_path):
+        return load_model(model_path)
+    else:
+        raise FileNotFoundError(f"Model file '{model_name}.h5' not found.")
+    
+
 
 def butter_bandpass(lowcut, highcut, fs, order=1):
     nyquist = 0.5 * fs
@@ -81,17 +92,6 @@ def apply_bandpass_filter(data,FS,LOWCUT,HIGHCUT):
 
 
 def reshape_float_input(input_data, num_rows, num_columns):
-    """
-    Reshape the input data to match the desired shape.
-    
-    Parameters:
-    - input_data: The input array-like object to be reshaped.
-    - num_rows: The number of rows in the reshaped array.
-    - num_columns: The number of columns in the reshaped array.
-    
-    Returns:
-    - reshaped_array: The reshaped array.
-    """
     # Convert input data to numpy array
     input_array = np.array(input_data)
     # Convert num_rows and num_columns to integers
@@ -113,79 +113,65 @@ def new_patient_profile(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
     csv_file = CSVFile.objects.get(patient=patient)
 
+    # Load the selected model if available
+    model = None
+    model_name = request.POST.get('model', None)
+    if model_name:
+        try:
+            model = load_model_from_file(model_name)
+            # Model loaded successfully
+        except FileNotFoundError as e:
+            print(e)
+            # Handle the case where the model file is not found
+
     if request.method == 'POST':
-        # Retrieve the CSV file path and sampling frequency
-        csv_file_path = csv_file.csv_file.path
-        sampling_frequency = csv_file.sampling_frequency
+        if model:
+            # Retrieve the CSV file path and sampling frequency
+            csv_file_path = csv_file.csv_file.path
+            sampling_frequency = csv_file.sampling_frequency
 
-        # Load CSV data
-        df = pd.read_csv(csv_file_path)
-        
-        FS=sampling_frequency
-        LOWCUT = 1  # Low cut-off frequency in Hz
-        HIGHCUT = 45  # High cut-off frequency in Hz
-
-        # Apply band-pass filter to the signal
-        # filtered_data = apply_bandpass_filter(df['signal'].values,FS,LOWCUT,HIGHCUT)
-
-        # Reshape data to match model input shape if needed
-        # For example, if the model expects input shape (batch_size, sequence_length, num_features),
-        # and your data is 1D, you might need to reshape it to (1, sequence_length, 1)
-        # filtered_data = np.expand_dims(filtered_data, axis=0)  # Add batch dimension
-        # filtered_data = np.expand_dims(filtered_data, axis=2)  # Add feature dimension
-
-        signal=df.values.flatten()
-        filtered_data=signal
-        num_columns=60*FS
-        # precision = 3
-        # filtered_data = np.array([np.round(value, precision) for value in filtered_data])
-        num_rows = len(filtered_data) // num_columns  # Determine the number of rows
-
-        # Initialize variables to count the number of one and zero classes
-        num_ones = 0
-        num_zeros = 0
-
-        # Iterate through each row of the filtered data
-        for i in range(420):
-            # Calculate start and end indices for the current row
-            start_index =int ( i * num_columns)
-            end_index = int(start_index + num_columns)
-
+            # Load CSV data
+            df = pd.read_csv(csv_file_path)
             
-            # Get the current row
-            row = filtered_data[start_index:end_index]
-            
-            # Apply band-pass filter to the row
-            # filtered_row = apply_bandpass_filter(row, FS, LOWCUT, HIGHCUT)
-            # Round the values of the row to the desired precision
-            # rounded_row = np.round(row, 3)
-            # Reshape the row to match the input shape of your model
-            # Reshape the row to match the input shape of your model, handling float values
-            reshaped_row = reshape_float_input(row, 1, num_columns)
-            
-            # Make predictions on the reshaped row
-            predictions = model.predict(reshaped_row)
-            
-            # If the prediction is greater than 0.5, classify as class 1, else classify as class 0
-            predicted_class = 1 if predictions > 0.5 else 0
+            FS = sampling_frequency
+            LOWCUT = 1  # Low cut-off frequency in Hz
+            HIGHCUT = 45  # High cut-off frequency in Hz
 
-            # Increment the count of one and zero classes based on the predicted class
-            if predicted_class == 1:
-                num_ones += 1
+            signal = df.values.flatten()
+            filtered_data = signal
+            num_columns = 60 * FS
+
+            num_ones = 0
+            num_zeros = 0
+
+            # Iterate through each row of the filtered data
+            for i in range(420):
+                start_index = int(i * num_columns)
+                end_index = int(start_index + num_columns)
+                
+                row = filtered_data[start_index:end_index]
+                
+                reshaped_row = reshape_float_input(row, 1, num_columns)
+                
+                predictions = model.predict(reshaped_row)
+                
+                predicted_class = 1 if predictions > 0.5 else 0
+
+                if predicted_class == 1:
+                    num_ones += 1
+                else:
+                    num_zeros += 1
+
+            ratio = num_ones / (num_ones + num_zeros)
+            if ratio >= 0.5:
+                diagnosis_output = 'Severe'
+            elif ratio >= 0.25 and ratio < 0.5:
+                diagnosis_output = 'Moderate'
+            elif ratio >= 0.125 and ratio < 0.25:
+                diagnosis_output = 'Mild'
             else:
-                num_zeros += 1
+                diagnosis_output = 'Normal'
 
-        ratio=num_ones/(num_ones+num_zeros)
-        if ratio>=0.5:
-            diagnosis_output='Severe'
-        elif ratio>=0.25 and ratio<0.5:
-            diagnosis_output='Moderate'
-        elif ratio>=0.125 and ratio<0.25:
-            diagnosis_output='Mild'
-        else:
-            diagnosis_output='Normal'
+            return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output, 'apneac_events': num_ones, 'total_events': 420})
 
-
-        return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output,'apneac_events':num_ones,'total_events':420})
-
-    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient})
+    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'model': model})

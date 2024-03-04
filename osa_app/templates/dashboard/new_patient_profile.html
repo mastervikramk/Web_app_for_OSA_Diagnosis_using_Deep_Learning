@@ -59,18 +59,27 @@
 
                 <!-- Diagnosis and Result Cards -->
                 <div class="row">
-                    <!-- Diagnosis Button Card -->
+                    <!-- Model Selection Form -->
                     <div class="col-md-6 flex-item">
                         <div class="card bg-primary text-white">
                             <div class="card-body">
-                                <h2 class="card-title">Diagnose</h2>
+                                <h2 class="card-title">Select Model</h2>
                                 <form method="POST" action="{% url 'new_patient_profile' patient.id %}">
                                     {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="model_select">Choose a Model:</label>
+                                        <select class="form-control" id="model_select" name="model">
+                                            <option value="model1">Model1</option>
+                                            <option value="model2">Model2</option>
+                                            <!-- Add more options for other models if needed -->
+                                        </select>
+                                    </div>
                                     <button type="submit" class="btn btn-light btn-block">Diagnose</button>
                                 </form>
                             </div>
                         </div>
                     </div>
+                </div>
                     <!-- Diagnosis Result Card -->
                     <div class="col-md-6 flex-item">
                         <div class="card bg-info text-white">
