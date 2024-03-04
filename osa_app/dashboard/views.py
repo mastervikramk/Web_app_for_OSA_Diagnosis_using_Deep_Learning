@@ -146,7 +146,7 @@ def new_patient_profile(request, patient_id):
         num_zeros = 0
 
         # Iterate through each row of the filtered data
-        for i in range(10):
+        for i in range(420):
             # Calculate start and end indices for the current row
             start_index =int ( i * num_columns)
             end_index = int(start_index + num_columns)
@@ -166,8 +166,8 @@ def new_patient_profile(request, patient_id):
             # Make predictions on the reshaped row
             predictions = model.predict(reshaped_row)
             
-            # If your model outputs probabilities, you can get the predicted class by taking the argmax
-            predicted_class = np.argmax(predictions)
+            # If the prediction is greater than 0.5, classify as class 1, else classify as class 0
+            predicted_class = 1 if predictions > 0.5 else 0
 
             # Increment the count of one and zero classes based on the predicted class
             if predicted_class == 1:
@@ -186,6 +186,6 @@ def new_patient_profile(request, patient_id):
             diagnosis_output='Normal'
 
 
-        return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output})
+        return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output,'apneac_events':num_ones,'total_events':420})
 
     return render(request, 'dashboard/new_patient_profile.html', {'patient': patient})
