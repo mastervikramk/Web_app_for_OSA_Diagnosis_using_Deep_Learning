@@ -4,19 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Old_patient_profile</title>
+    <title>{{ patient.first_name }} {{ patient.last_name }} - Patient Profile</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Add custom styles here */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #343a40; /* Bootstrap dark background color */
-            color: #ffffff; /* Bootstrap light text color */
-            text-align: center;
-            padding: 10px 0;
+        .flex-item {
+            margin-bottom: 20px;
+        }
+
+        .content-wrapper {
+            min-height: calc(100vh - 50px);
+            /* Subtracting the height of the footer */
+        }
+
+        /* Custom card color */
+        .custom-card {
+            background-color: #f0f0f0;
+            /* Your desired background color */
         }
     </style>
 </head>
@@ -48,7 +52,8 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6 offset-md-3 content-wrapper">
-                <div class="card bg-light">
+                <!-- Patient Details Card -->
+                <div class="card bg-light mb-4">
                     <div class="card-header bg-primary text-white"> <!-- Bootstrap primary background color -->
                         Patient Details
                     </div>
@@ -60,12 +65,30 @@
                         <p class="card-text">Height: {{ patient.height }}</p>
                     </div>
                 </div>
+
+                <!-- Form Card -->
+                <div class="card bg-light">
+                    <div class="card bg-primary text-white flex-item h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">Upload CSV File</h2>
+                            <form method="post" enctype="multipart/form-data" action="{% url 'upload_csv' patient_id=patient.id %}">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" class="btn btn-light btn-block">Upload</button>
+                            </form>
+                            
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
+    </div>
+
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="bg-dark text-light text-center py-3 fixed-bottom">
         <div class="container">
             <p>&copy; 2024 OSA Diagnosis. All rights reserved.</p>
         </div>

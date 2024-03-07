@@ -16,3 +16,7 @@ class CSVFileForm(forms.ModelForm):
         fields = ['csv_file', 'sampling_frequency']
 
 
+class CSVUploadForm(forms.ModelForm):
+    class Meta:
+        model = CSVFile
+        fields = ['csv_file', 'sampling_frequency']

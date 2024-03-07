@@ -52,11 +52,15 @@ def old_patient(request):
         patients = Patient.objects.filter(user=request.user)
     return render(request, 'dashboard/old_patient.html', {'patients': patients})
 
+from .forms import CSVUploadForm
+
 
 def old_patient_profile(request, patient_id):
+    # print("Inside old_patient_profile view function")  # Debug print statement
     patient = get_object_or_404(Patient, id=patient_id)
-    return render(request, 'dashboard/old_patient_profile.html', {'patient': patient})
-
+    form = CSVUploadForm()
+    # print("Form initialized successfully")  # Debug print statement
+    return render(request, 'dashboard/old_patient_profile.html', {'patient': patient, 'form': form})
 
 
 # def new_patient_profile(request, patient_id):
@@ -113,8 +117,10 @@ def reshape_float_input(input_data, num_rows, num_columns):
 
 def new_patient_profile(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
-    csv_file = CSVFile.objects.get(patient=patient)
-
+    try:
+        csv_file = CSVFile.objects.filter(patient=patient).first()
+    except CSVFile.DoesNotExist:
+        csv_file = None
     # Load the selected model if available
     model = None
     model_name = request.POST.get('model', None)
@@ -177,3 +183,36 @@ def new_patient_profile(request, patient_id):
             return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output, 'apneac_events': num_ones, 'total_events': 420, 'model': model_name})
 
     return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'model': model_name})
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from .forms import CSVUploadForm
+from .models import Patient, CSVFile
+
+def upload_csv(request, patient_id):
+    patient = get_object_or_404(Patient, id=patient_id)
+    
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = form.cleaned_data['csv_file']
+            sampling_frequency = form.cleaned_data['sampling_frequency']
+            
+            try:
+                # Save the CSV file to the CSVFile model
+                new_csv_file = CSVFile(patient=patient, csv_file=csv_file, sampling_frequency=sampling_frequency)
+                new_csv_file.save()
+                
+                # Redirect to the new patient profile page
+                return redirect('new_patient_profile', patient_id=patient_id)
+            except Exception as e:
+                messages.error(request, f"Error saving CSV file: {e}")
+        else:
+            messages.error(request, "Invalid form data. Please check the provided information.")
+    
+    # If the request method is not POST or if form is not valid, render the form again
+    else:
+        form = CSVUploadForm()
+    
+    return render(request, 'dashboard/new_patient_profile.html', {'form': form, 'patient': patient})
+
