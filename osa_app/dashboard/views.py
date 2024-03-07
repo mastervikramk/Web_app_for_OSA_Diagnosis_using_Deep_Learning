@@ -179,7 +179,11 @@ def new_patient_profile(request, patient_id):
                 diagnosis_output = 'Mild'
             else:
                 diagnosis_output = 'Normal'
-
+            
+            # Save diagnosis output to CSVFile model
+            csv_file.diagnosis_output = diagnosis_output
+            csv_file.save()
+            
             return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output, 'apneac_events': num_ones, 'total_events': 420, 'model': model_name})
 
     return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'model': model_name})
@@ -215,4 +219,3 @@ def upload_csv(request, patient_id):
         form = CSVUploadForm()
     
     return render(request, 'dashboard/new_patient_profile.html', {'form': form, 'patient': patient})
-
