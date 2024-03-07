@@ -19,5 +19,5 @@ class Patient(models.Model):
 class CSVFile(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     csv_file = models.FileField(upload_to='csv_files/')
-    sampling_frequency = models.FloatField(default=0.0)
+    sampling_frequency = models.FloatField()
   
