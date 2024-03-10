@@ -3,19 +3,20 @@ from .forms import PatientForm
 from .models import Patient,CSVFile
 from .forms import PatientForm, CSVFileForm
 from django.contrib.auth.decorators import login_required  # Import the login_required decorator
-
 import pandas as pd
 import numpy as np
 from scipy.signal import butter, filtfilt
 from keras.models import load_model
 from .models import CSVFile
+import os
+from PIL import Image
+from .forms import CSVUploadForm
+from django.urls import reverse
+from django.contrib import messages
 
 # Create your views here.
 def dashboard(request):
     return render(request,"dashboard/dashboard.html")
-
-
-from django.urls import reverse
 
 @login_required
 def new_patient(request):
@@ -52,7 +53,6 @@ def old_patient(request):
         patients = Patient.objects.filter(user=request.user)
     return render(request, 'dashboard/old_patient.html', {'patients': patients})
 
-from .forms import CSVUploadForm
 
 
 def old_patient_profile(request, patient_id):
@@ -63,17 +63,6 @@ def old_patient_profile(request, patient_id):
     return render(request, 'dashboard/old_patient_profile.html', {'patient': patient, 'form': form})
 
 
-# def new_patient_profile(request, patient_id):
-#     patient = get_object_or_404(Patient, id=patient_id)
-#     return render(request, 'dashboard/new_patient_profile.html', {'patient': patient})
-
-
-
-# # Load the machine learning model
-# MODEL_FILE_PATH = 'my_model.h5'
-# model = load_model(MODEL_FILE_PATH)
-import os
-from PIL import Image
 
 MODEL_DIRECTORY = 'models'
 def load_model_from_file(model_name):
@@ -95,6 +84,29 @@ def apply_bandpass_filter(data,FS,LOWCUT,HIGHCUT):
     b, a = butter_bandpass(LOWCUT, HIGHCUT, FS)
     filtered_data = filtfilt(b, a, data)
     return filtered_data
+
+from scipy import signal
+
+def upsample_ecg(ecg_signal, input_fs, output_fs):
+    # Calculate the interpolation factor
+    interpolation_factor = int(output_fs / input_fs)
+    
+    # Upsample the ECG signal
+    upsampled_ecg = signal.resample_poly(ecg_signal, interpolation_factor, 1)
+    
+    
+    return upsampled_ecg
+
+def downsample_ecg(ecg_signal, input_fs, output_fs):
+    # Calculate the decimation factor
+    decimation_factor = int(input_fs / output_fs)
+    
+    # Downsample the ECG signal
+    downsampled_ecg = signal.decimate(ecg_signal, decimation_factor)
+    
+    
+    return downsampled_ecg
+
 
 
 def reshape_float_input(input_data, num_rows, num_columns):
@@ -118,7 +130,7 @@ def reshape_float_input(input_data, num_rows, num_columns):
 def new_patient_profile(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
     try:
-        csv_file = CSVFile.objects.filter(patient=patient).first()
+        csv_file = CSVFile.objects.filter(patient=patient).last()
     except CSVFile.DoesNotExist:
         csv_file = None
     # Load the selected model if available
@@ -141,26 +153,37 @@ def new_patient_profile(request, patient_id):
             # Load CSV data
             df = pd.read_csv(csv_file_path)
             
-            FS = sampling_frequency
+            if sampling_frequency<100:
+                # Downsample the ECG signal
+                new_ecg = upsample_ecg(df, sampling_frequency, 100)
+            
+            elif sampling_frequency>100:
+                new_ecg=downsample_ecg(df,sampling_frequency,100)
+
+            else:
+                new_ecg=df
+
+            FS = 100
             LOWCUT = 1  # Low cut-off frequency in Hz
             HIGHCUT = 45  # High cut-off frequency in Hz
-
-            signal = df.values.flatten()
-            filtered_data = signal
+            
+            ecg_df=pd.DataFrame(new_ecg)
+            ecg_signal = ecg_df.values.flatten()
             num_columns = 60 * FS
-
+            total_datapoints=len(ecg_signal)
+            num_rows=total_datapoints//num_columns
             num_ones = 0
             num_zeros = 0
 
             # Iterate through each row of the filtered data
-            for i in range(420):
+            for i in range(num_rows):
                 start_index = int(i * num_columns)
                 end_index = int(start_index + num_columns)
                 
-                row = filtered_data[start_index:end_index]
-                
-                reshaped_row = reshape_float_input(row, 1, num_columns)
-                
+                row = ecg_signal[start_index:end_index]
+                new_row=apply_bandpass_filter(data=row,FS=FS,LOWCUT=LOWCUT,HIGHCUT=HIGHCUT)
+                reshaped_row = reshape_float_input(new_row, 1, num_columns)
+        
                 predictions = model.predict(reshaped_row)
                 
                 predicted_class = 1 if predictions > 0.5 else 0
@@ -188,10 +211,6 @@ def new_patient_profile(request, patient_id):
 
     return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'model': model_name})
 
-from django.shortcuts import redirect, get_object_or_404
-from django.contrib import messages
-from .forms import CSVUploadForm
-from .models import Patient, CSVFile
 
 def upload_csv(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
