@@ -7,5 +7,5 @@ urlpatterns=[
     path('old_patient', views.old_patient, name='old_patient'),
     path('patient/<int:patient_id>/old/', views.old_patient_profile, name='old_patient_profile'),
     path('patient/<int:patient_id>/new/', views.new_patient_profile, name='new_patient_profile'),
-    path('patient/<int:patient_id>/upload_csv/', views.upload_csv, name='upload_csv'),
+    path('patient/<int:patient_id>/upload_csv/', views.upload_csv, name='upload_csv')
 ]

@@ -127,6 +127,17 @@ def reshape_float_input(input_data, num_rows, num_columns):
     
     return reshaped_array
 
+def categorize_bmi(bmi):
+    if bmi < 18.5:
+        return "Underweight"
+    elif bmi >= 18.5 and bmi < 25:
+        return "Normal"
+    elif bmi >= 25 and bmi < 30:
+        return "Overweight"
+    else:
+        return "Obese"
+
+
 def new_patient_profile(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
     try:
@@ -143,6 +154,17 @@ def new_patient_profile(request, patient_id):
         except FileNotFoundError as e:
             print(e)
             # Handle the case where the model file is not found
+
+    # Calculate BMI
+    height_in_meters = patient.height / 100  # Convert height to meters
+    weight = patient.weight
+    if height_in_meters > 0:  # Avoid division by zero
+        bmi = round(weight / (height_in_meters ** 2), 2)
+    else:
+        bmi = None
+
+    # Categorize BMI
+    bmi_category = categorize_bmi(bmi)
 
     if request.method == 'POST':
         if model:
@@ -163,6 +185,8 @@ def new_patient_profile(request, patient_id):
             else:
                 new_ecg=df
 
+           
+
             FS = 100
             LOWCUT = 1  # Low cut-off frequency in Hz
             HIGHCUT = 45  # High cut-off frequency in Hz
@@ -174,7 +198,7 @@ def new_patient_profile(request, patient_id):
             num_rows=total_datapoints//num_columns
             num_ones = 0
             num_zeros = 0
-
+             
             # Iterate through each row of the filtered data
             for i in range(num_rows):
                 start_index = int(i * num_columns)
@@ -207,9 +231,10 @@ def new_patient_profile(request, patient_id):
             csv_file.diagnosis_output = diagnosis_output
             csv_file.save()
             
-            return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output, 'apneac_events': num_ones, 'total_events': 420, 'model': model_name})
+            return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'diagnosis_output': diagnosis_output, 'apneac_events': num_ones, 'total_events': num_rows, 'model': model_name})
 
-    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient, 'model': model_name})
+    return render(request, 'dashboard/new_patient_profile.html', {'patient': patient,'bmi': bmi, 'bmi_category': bmi_category, 'model': model_name})
+
 
 
 def upload_csv(request, patient_id):
@@ -238,3 +263,4 @@ def upload_csv(request, patient_id):
         form = CSVUploadForm()
     
     return render(request, 'dashboard/new_patient_profile.html', {'form': form, 'patient': patient})
+

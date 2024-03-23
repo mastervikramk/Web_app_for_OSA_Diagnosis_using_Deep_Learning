@@ -13,8 +13,7 @@ class Patient(models.Model):
 
     def __str__(self):
         return self.first_name
-
-
+    
 
 class CSVFile(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
