@@ -9,3 +9,4 @@ urlpatterns=[
     path('patient/<int:patient_id>/new/', views.new_patient_profile, name='new_patient_profile'),
     path('patient/<int:patient_id>/upload_csv/', views.upload_csv, name='upload_csv')
 ]
+

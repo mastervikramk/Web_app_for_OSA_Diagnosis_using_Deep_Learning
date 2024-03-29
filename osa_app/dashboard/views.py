@@ -185,7 +185,6 @@ def new_patient_profile(request, patient_id):
             else:
                 new_ecg=df
 
-           
 
             FS = 100
             LOWCUT = 1  # Low cut-off frequency in Hz
@@ -219,13 +218,13 @@ def new_patient_profile(request, patient_id):
 
             ratio = num_ones / (num_ones + num_zeros)
             if ratio >= 0.5:
-                diagnosis_output = 'Severe'
+                diagnosis_output = 'SEVERE'
             elif ratio >= 0.25 and ratio < 0.5:
-                diagnosis_output = 'Moderate'
+                diagnosis_output = 'MODERATE'
             elif ratio >= 0.125 and ratio < 0.25:
-                diagnosis_output = 'Mild'
+                diagnosis_output = 'MILD'
             else:
-                diagnosis_output = 'Normal'
+                diagnosis_output = 'NORMAL'
             
             # Save diagnosis output to CSVFile model
             csv_file.diagnosis_output = diagnosis_output
