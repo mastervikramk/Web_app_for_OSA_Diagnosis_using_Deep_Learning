@@ -7,6 +7,17 @@
     <title>{{ patient.first_name }} {{ patient.last_name }} - Patient Profile</title>
     <!-- Include Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .footer {
+            margin-top: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -68,7 +79,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light text-center py-3">
+    <footer class="bg-dark text-light text-center py-3 footer">
         <div class="container">
             <p>&copy; 2024 OSA Diagnosis. All rights reserved.</p>
         </div>

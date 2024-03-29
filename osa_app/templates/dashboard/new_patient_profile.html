@@ -86,7 +86,46 @@
                                 <h2 class="card-title">Body Mass Index (BMI)</h2>
                                 <!-- Display BMI here -->
                                 <p><strong>BMI:</strong> {{ bmi }}</p>
-                                <p><strong>Category:</strong> {{ bmi_category }}</p>
+                                <!-- Display BMI Category using Bootstrap progress bar -->
+                                <div class="progress">
+                                    {% if bmi_category == 'Underweight' %}
+                                    <div class="progress-bar bg-dark" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Underweight</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Normal</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Overweight</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Obese</div>
+                                    {% elif bmi_category == 'Normal' %}
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Underweight</div>
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Normal</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Overweight</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Obese</div>
+                                    {% elif bmi_category == 'Overweight' %}
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Underweight</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Normal</div>
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Overweight</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Obese</div>
+                                    {% elif bmi_category == 'Obese' %}
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Underweight</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Normal</div>
+                                    <div class="progress-bar bg-light" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Overweight</div>
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 25%; color: black;"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Obese</div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,7 +135,7 @@
                 <div class="row mt-4">
                     <!-- Model Selection Form -->
                     <div class="col-md-6">
-                        <div class="card bg-primary text-white flex-item h-100">
+                        <div class="card bg-primary text-white flex-item h-100 position-relative">
                             <div class="card-body">
                                 <h2 class="card-title">Select Model</h2>
                                 <form id="diagnosis-form" method="POST"
@@ -112,12 +151,19 @@
                                             <!-- Add more options for other models if needed -->
                                         </select>
                                     </div>
-                                    <button type="submit" class="btn btn-light btn-block">Diagnose</button>
+                                    <button type="submit" class="btn btn-light btn-block"
+                                        id="diagnose-btn">Diagnose</button>
                                 </form>
+                                <!-- Spinner markup -->
+                                <div id="loading-spinner" style="display: none;">
+                                    <div class="spinner-border text-light" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p class="text-light">Please wait...</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Image corresponding to selected model -->
                     <div class="col-md-6">
                         <div class="card bg-light flex-item h-100">
@@ -131,19 +177,23 @@
                     </div>
                 </div>
 
-
-
                 <!-- Third Row -->
-                <div class="row mt-4">
+                <div class="row mt-4 justify-content-center">
                     <!-- Diagnosis Result Card -->
-                    <div class="col-md-12">
+                    <div class="col-md-8">
                         <div class="card bg-info text-white flex-item h-100">
                             <div class="card-body">
-                                <h2 class="card-title">Diagnosis Output</h2>
+                                <h2 class="card-title text-center">Diagnosis Output</h2>
                                 {% if diagnosis_output %}
-                                <p><b>{{ diagnosis_output }}</b></p>
-                                <p>Apneac Events: {{ apneac_events }}</p>
-                                <p>Total Events: {{ total_events }}</p>
+                                <div style="font-weight: bold; color: #ff6f00;">
+                                    <p class="text-center">Apneac Events: <span
+                                            style="color: #131111;">{{ apneac_events }}</span></p>
+                                    <p class="text-center">Total Events: <span
+                                            style="color: #110f0f;">{{ total_events }}</span></p>
+                                </div>
+                                <div style="font-weight: bold; color: #00b0ff;" class="text-center">
+                                    <p><span style="color: #0c0b0b;">{{ diagnosis_output }}</span></p>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -165,6 +215,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $('#diagnosis-form').on('submit', function () {
+                $('#diagnose-btn').hide(); // Hide the diagnose button
+                $('#loading-spinner').show(); // Show the loading spinner
+            });
+        });
+
         function showModelImage() {
             var modelSelect = document.getElementById("model_select");
             var modelImageContainer = document.getElementById("model_image_container");
