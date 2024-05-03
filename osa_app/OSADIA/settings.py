@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,8 +27,7 @@ SECRET_KEY = "django-insecure-rq@p24$g1c&g1mxnw5yb!j@4$0r)0szlik0ninc1xzrd9jg@bd
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ["192.168.43.73","127.0.0.1","192.168.65.56","192.168.0.144"]
+ALLOWED_HOSTS = ["127.0.0.1","192.168.0.120"]
 
 
 # Application definition
@@ -123,6 +125,7 @@ STATIC_URL = "static/"
 # Define the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+
 # Additional locations of static files
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -132,3 +135,4 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
