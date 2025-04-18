@@ -23,16 +23,47 @@ Welcome to a transformative medical AI solution designed for **early detection a
 
 Our 1D CNN was designed and trained specifically for ECG signals with a sampling frequency of **100 Hz**.
 
-<p align="center">
-  <img src="https://drive.google.com/file/d/1Ocs2iU5z7m6eHNE9uBF8CYlyuiGDCVVk/view?usp=drive_link" alt="Model Architecture" width="700"/>
-</p>
+
+| Layer (type)               | Output Shape       | Param #     |
+|---------------------------|--------------------|-------------|
+| Conv1D                    | (None, 5991, 64)   | 704         |
+| BatchNormalization        | (None, 5991, 64)   | 256         |
+| LeakyReLU                 | (None, 5991, 64)   | 0           |
+| MaxPooling1D              | (None, 2995, 64)   | 0           |
+| Dropout                   | (None, 2995, 64)   | 0           |
+| Conv1D                    | (None, 2991, 128)  | 41,088      |
+| LeakyReLU                 | (None, 2991, 128)  | 0           |
+| MaxPooling1D              | (None, 1495, 128)  | 0           |
+| Dropout                   | (None, 1495, 128)  | 0           |
+| Conv1D                    | (None, 1493, 256)  | 98,560      |
+| BatchNormalization        | (None, 1493, 256)  | 1,024       |
+| LeakyReLU                 | (None, 1493, 256)  | 0           |
+| MaxPooling1D              | (None, 746, 256)   | 0           |
+| Dropout                   | (None, 746, 256)   | 0           |
+| Conv1D                    | (None, 744, 512)   | 393,728     |
+| LeakyReLU                 | (None, 744, 512)   | 0           |
+| MaxPooling1D              | (None, 372, 512)   | 0           |
+| Dropout                   | (None, 372, 512)   | 0           |
+| Conv1D                    | (None, 370, 1024)  | 1,573,888   |
+| BatchNormalization        | (None, 370, 1024)  | 4,096       |
+| LeakyReLU                 | (None, 370, 1024)  | 0           |
+| MaxPooling1D              | (None, 185, 1024)  | 0           |
+| Dropout                   | (None, 185, 1024)  | 0           |
+| Flatten                   | (None, 189440)     | 0           |
+| Dense                     | (None, 512)        | 96,993,792  |
+| Dropout                   | (None, 512)        | 0           |
+| Dense                     | (None, 256)        | 131,328     |
+| BatchNormalization        | (None, 256)        | 1,024       |
+| Dropout                   | (None, 256)        | 0           |
+| Dense                     | (None, 1)          | 257         |
+
 
 ---
 
 ## 📊 Training Performance
 
 <p align="center">
-  <img src="https://drive.google.com/file/d/1B-U95HLJdz9WSsGtVEDiV8jqN0CFQIui/view?usp=drive_link" alt="Training Plot" width="700"/>
+  <img src="training_plot.png" alt="Training Plot" width="700"/>
 </p>
 
 > **Note**: The model was trained on labeled ECG datasets and validated for high precision and reliability in OSA classification.
