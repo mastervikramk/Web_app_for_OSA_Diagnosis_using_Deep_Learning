@@ -81,8 +81,42 @@ Our 1D CNN was designed and trained specifically for ECG signals with a sampling
 
 ## 💾 Model & Demo Resources
 
-- 🔗 **Trained Model**: [Download from Google Drive](https://drive.google.com/file/d/1j1wLkALEAPzME3Mai_PAcUVM-fTtBhAZ/view?usp=drive_link)
 - 📽️ **Full Demo Video (Django Web App)**: [Watch on Google Drive](https://drive.google.com/file/d/1pQ66heM4wFee2g9uJoUKD5EKA6uIgEZ6/view?usp=drive_link)
 
 ---
+## 🖥️ Run the Project Locally
+
+Follow the steps below to set up and run the OSA Diagnosis Web Application on your local machine:
+
+- **Clone the Repository:**
+  ```bash
+  git clone https://github.com/your-username/OSA-ECG-Diagnosis-App.git
+  cd OSA-ECG-Diagnosis-App/osa_app
+  ```
+
+- **Create a Virtual Environment:**
+  ```bash
+  python -m venv venv
+  source venv/bin/activate      # On Windows: venv\Scripts\activate
+  ```
+
+- **Install Dependencies:**
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+- **Download the Trained Model:**
+  - Download the model from this [Google Drive link]([https://drive.google.com/your-model-link](https://drive.google.com/file/d/1j1wLkALEAPzME3Mai_PAcUVM-fTtBhAZ/view?usp=drive_link))
+  - Move the downloaded file (e.g., `model2.tflite`) into model folder( osa_app/model)
+
+- **Run the Server:**
+  ```bash
+  python manage.py runserver
+  ```
+
+- **Access the App:**
+  Visit [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+---
+
 
