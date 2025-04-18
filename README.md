@@ -91,7 +91,7 @@ Follow the steps below to set up and run the OSA Diagnosis Web Application on yo
 - **Clone the Repository:**
   ```bash
   git clone https://github.com/mastervikramk/Web_app_for_OSA_Diagnosis_using_Deep_Learning.git
-  cd Web_app_for_OSA_Diagnosis_using_Deep_Learning.git/osa_app
+  cd Web_app_for_OSA_Diagnosis_using_Deep_Learning/osa_app
   ```
 
 - **Create a Virtual Environment:**
