@@ -94,14 +94,14 @@ Follow the steps below to set up and run the OSA Diagnosis Web Application on yo
   cd Web_app_for_OSA_Diagnosis_using_Deep_Learning/osa_app
   ```
 
-- **Create a Virtual Environment:**
-  ```bash
+- **Create a Virtual Environment(Windows):**
+  ```
   python -m venv venv
-  source venv/bin/activate      # On Windows: venv\Scripts\activate
+  venv\Scripts\activate     
   ```
 
 - **Install Dependencies:**
-  ```bash
+  ```
   pip install -r requirements.txt
   ```
 
@@ -110,7 +110,7 @@ Follow the steps below to set up and run the OSA Diagnosis Web Application on yo
   - Move the downloaded file (e.g., `model2.tflite`) into model folder( osa_app/model)
 
 - **Run the Server:**
-  ```bash
+  ``
   python manage.py runserver
   ```
 
