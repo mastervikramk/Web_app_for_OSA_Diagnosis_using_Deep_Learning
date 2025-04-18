@@ -89,15 +89,20 @@ Our 1D CNN was designed and trained specifically for ECG signals with a sampling
 Follow the steps below to set up and run the OSA Diagnosis Web Application on your local machine:
 
 - **Clone the Repository:**
-  ```bash
+  ```
   git clone https://github.com/mastervikramk/Web_app_for_OSA_Diagnosis_using_Deep_Learning.git
-  cd Web_app_for_OSA_Diagnosis_using_Deep_Learning/osa_app
+  cd Web_app_for_OSA_Diagnosis_using_Deep_Learning
+  ```
+  - **Install python-3.10:**
+  ```
+  Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.10.11/python-3.10.11-amd64.exe" -OutFile "python-3.10.11-amd64.exe"
+  .\python-3.10.11-amd64.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0 
   ```
 
 - **Create a Virtual Environment(Windows):**
-  ```
-  python -m venv venv
-  venv\Scripts\activate     
+  ```powershell
+  py -3.10 -m venv new_venv
+  .\new_venv\Scripts\Activate.ps1  
   ```
 
 - **Install Dependencies:**
