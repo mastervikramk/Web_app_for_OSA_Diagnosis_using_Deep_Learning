@@ -63,8 +63,7 @@ Our 1D CNN was designed and trained specifically for ECG signals with a sampling
 ## 📊 Training Performance
 
 <p align="center">
-  <img src="osa_app/static/css/training_plot.png
-" alt="Training Plot" width="700"/>
+  <img src="osa_app/static/css/training_plot.png" alt="Training Plot" width="700"/>
 </p>
 
 > **Note**: The model was trained on labeled ECG datasets and validated for high precision and reliability in OSA classification.
