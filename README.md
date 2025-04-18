@@ -106,7 +106,7 @@ Follow the steps below to set up and run the OSA Diagnosis Web Application on yo
   ```
 
 - **Download the Trained Model:**
-  - Download the model from this [Google Drive link]([https://drive.google.com/your-model-link](https://drive.google.com/file/d/1j1wLkALEAPzME3Mai_PAcUVM-fTtBhAZ/view?usp=drive_link))
+  - Download the model from this https://drive.google.com/your-model-link](https://drive.google.com/file/d/1j1wLkALEAPzME3Mai_PAcUVM-fTtBhAZ/view?usp=drive_link
   - Move the downloaded file (e.g., `model2.tflite`) into model folder( osa_app/model)
 
 - **Run the Server:**
