@@ -79,7 +79,7 @@ Our 1D CNN was designed and trained specifically for ECG signals with a sampling
 
 ---
 
-## 💾 Model & Demo Resources
+## 💾 Demo
 
 - 📽️ **Full Demo Video (Django Web App)**: [Watch on Google Drive](https://drive.google.com/file/d/1pQ66heM4wFee2g9uJoUKD5EKA6uIgEZ6/view?usp=drive_link)
 
